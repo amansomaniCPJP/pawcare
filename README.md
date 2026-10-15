@@ -1,28 +1,64 @@
-# PawCare - DBMS mini project (backend + frontend)
+# PawCare - Pet Adoption & Care Management System
 
-    pawcare-project/
-      backend/    Flask API + SQLite database (schema.sql, seed.sql)
-      frontend/   React (Vite) app "Pawhaven", already wired to the backend
+DBMS Mini Project - Sardar Patel Institute of Technology, Mumbai
 
-## Run it (needs Python 3 and Node.js 18+; two terminals)
+**Submitted by:** Aman Somani (UID 2025300246), Computer Engineering, Div D
+**Group members:** Chandana Shinde, Harsh Shinde
 
-Terminal 1 - backend
-    cd backend
-    pip3 install flask
-    python3 app.py                  # -> http://localhost:5001
+## Links
+| What | Link |
+|---|---|
+| Source code | https://github.com/amansomaniCPJP/pawcare |
+| Deployed website (Vercel) | `https://pawcare-rose.vercel.app` |
+| Backend API (Render) | https://pawcare-api-g90l.onrender.com/api/health |
 
-Terminal 2 - frontend
-    cd frontend
-    npm install
-    npm run dev                     # -> http://localhost:5173
+> The free Render server sleeps when idle. The first request can take ~30 seconds, and the demo data resets on restart.
 
+## What it does
+A shelter system for the full life of a pet: donation -> vet check-ups -> online listing -> adoption.
+Visitors browse and filter pets and apply to adopt. Admin staff review applications, manage pets, vets, medical records and donations, and see live reports.
+
+## Tech stack
+- **Frontend:** React 18, Vite, React Router
+- **Backend:** Python, Flask, Gunicorn (REST API)
+- **Database:** SQLite
+- **Hosting:** GitHub, Render (API), Vercel (website)
+
+## Database
+Tables: `PET`, `ADOPTER`, `ADOPTION`, `VETERINARIAN`, `MEDICAL_RECORD`, `PET_DONATION` (plus `ADOPTION_HISTORY`, `ADOPTION_NOTE`).
+- PK, FK, NOT NULL, UNIQUE, CHECK and DEFAULT constraints, indexes
+- View `PET_STATUS` (derives Available / Pending / Reserved / Adopted / Archived)
+- 2 triggers that block a pet from being adopted twice
+- All Lab 7 queries (joins, GROUP BY / HAVING, subqueries) at `GET /api/queries/<name>`
+
+Files: `backend/schema.sql`, `backend/seed.sql`, `backend/queries.py`.
+
+## Run locally
+**Backend** (port 5001)
+```
+cd backend
+pip3 install -r requirements.txt
+PORT=5001 python3 app.py
+```
+Check: http://localhost:5001/api/health
+
+**Frontend** (port 5173), in a second terminal
+```
+cd frontend
+npm install
+npm run dev
+```
 Open http://localhost:5173
-- Adopter login:  sarah@example.com / password123
-- Admin login:    admin@pawhaven.com / admin123
-If the backend runs on another address: create frontend/.env with  VITE_API_URL=http://localhost:5002/api
 
-## What is stored in the database and what is not
-In the database (through the API): pets, adopters, adoptions/applications (+ status history, staff notes),
-veterinarians, medical records, donations (admin page "Shelter Records").
-Still demo data inside the React app (no DB table): login/accounts, "My Pets", care tasks, health records of
-adopters' own pets, favourites, the Users/Reports/Shelters admin screens.
+**Tests:** `cd backend && python3 test_api.py` (12 tests)
+
+## Demo logins
+| Role | Email | Password |
+|---|---|---|
+| Adopter | sarah@example.com | password123 |
+| Admin | admin@pawhaven.com | admin123 |
+
+## Main API endpoints
+`/api/pets`, `/api/adoptions`, `/api/adopters`, `/api/vets`, `/api/medical-records`, `/api/donations`, `/api/reports`, `/api/uploads`, `/api/queries/<name>`
+
+More detail: `backend/EXPLAIN.md`
